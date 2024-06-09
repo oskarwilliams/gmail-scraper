@@ -1,0 +1,36 @@
+{
+  "name": "gmail-scraper",
+  "version": "1.0.0",
+  "description": "Scrape emails from different gmail inboxes",
+  "main": "src/index.ts",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oskarwilliams/gmail-scraper.git"
+  },
+  "author": "Oskar Williams",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/oskarwilliams/gmail-scraper/issues"
+  },
+  "homepage": "https://github.com/oskarwilliams/gmail-scraper#readme",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.2",
+    "husky": "9.0.11",
+    "lint-staged": "15.2.5",
+    "prettier": "3.3.1",
+    "tsx": "4.15.1"
+  },
+  "dependencies": {
+    "dotenv": "16.4.5",
+    "googleapis": "140.0.0",
+    "radash": "12.1.0"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  }
+}
