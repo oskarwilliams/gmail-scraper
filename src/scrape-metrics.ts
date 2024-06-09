@@ -4,8 +4,8 @@ import { getGmailApi } from "./auth/init";
 
 export const scrapeMetricsForUser = async (
   userId: string,
-  beforeDate: string,
-  afterDate: string,
+  fromDate: string,
+  toDate: string,
 ) => {
   let late24hrReply = 0;
   let late72hrReply = 0;
@@ -27,7 +27,7 @@ export const scrapeMetricsForUser = async (
   const threadListRequest = await gmailClient.users.threads.list({
     userId,
     maxResults: 500,
-    q: " after:" + afterDate + " before:" + beforeDate,
+    q: " after:" + fromDate + " before:" + toDate,
   });
 
   const threadList = threadListRequest.data.threads ?? [];
@@ -36,7 +36,7 @@ export const scrapeMetricsForUser = async (
     const nextThreadListRequest = await gmailClient.users.threads.list({
       userId,
       maxResults: 500,
-      q: " after:" + afterDate + " before:" + beforeDate,
+      q: " after:" + fromDate + " before:" + toDate,
       pageToken: threadListRequest.data.nextPageToken,
     });
 
@@ -108,8 +108,8 @@ export const scrapeMetricsForUser = async (
 
   return {
     userId, // Email Account
-    afterDate, // Date after
-    beforeDate, // Date before
+    afterDate: fromDate, // Date after
+    beforeDate: toDate, // Date before
     totalSentEmails, // Emails Sent
     totalReceivedEmails, // Emails Received
     avgReplyTime, // Reply Time in Hours
