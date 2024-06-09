@@ -29,7 +29,23 @@ export const scrapeMetricsForUser = async (
     maxResults: 500,
     q: " after:" + afterDate + " before:" + beforeDate,
   });
+
   const threadList = threadListRequest.data.threads ?? [];
+
+  if (threadListRequest.data.nextPageToken) {
+    const nextThreadListRequest = await gmailClient.users.threads.list({
+      userId,
+      maxResults: 500,
+      q: " after:" + afterDate + " before:" + beforeDate,
+      pageToken: threadListRequest.data.nextPageToken,
+    });
+
+    threadList.push(...(nextThreadListRequest.data.threads ?? []));
+
+    if (nextThreadListRequest.data.nextPageToken) {
+      throw new Error("Too many threads to process");
+    }
+  }
 
   const threadDetailsPromises = threadList.map(async ({ id }) => {
     if (!id) {
