@@ -19,7 +19,7 @@ const main = async () => {
   if (!existsSync(dataDir)) {
     mkdirSync(dataDir);
   }
-  writeFileSync(dataDir + "/results.csv", csv);
+  writeFileSync(`${dataDir}/results-${beforeDate}-${afterDate}.csv`, csv);
 };
 
 main();
