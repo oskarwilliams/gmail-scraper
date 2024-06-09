@@ -24,28 +24,7 @@ export const scrapeMetricsForUser = async (
     return !isReceivedMessage(message);
   };
 
-  const threadListRequest = await gmailClient.users.threads.list({
-    userId,
-    maxResults: 500,
-    q: " after:" + fromDate + " before:" + toDate,
-  });
-
-  const threadList = threadListRequest.data.threads ?? [];
-
-  if (threadListRequest.data.nextPageToken) {
-    const nextThreadListRequest = await gmailClient.users.threads.list({
-      userId,
-      maxResults: 500,
-      q: " after:" + fromDate + " before:" + toDate,
-      pageToken: threadListRequest.data.nextPageToken,
-    });
-
-    threadList.push(...(nextThreadListRequest.data.threads ?? []));
-
-    if (nextThreadListRequest.data.nextPageToken) {
-      throw new Error("Too many threads to process");
-    }
-  }
+  const threadList = await getThreadList(gmailClient, userId, fromDate, toDate);
 
   const threadDetailsPromises = threadList.map(async ({ id }) => {
     if (!id) {
@@ -117,3 +96,33 @@ export const scrapeMetricsForUser = async (
     late72hrReply, // Replies outside 72 hours
   };
 };
+
+async function getThreadList(
+  gmailClient: gmail_v1.Gmail,
+  userId: string,
+  fromDate: string,
+  toDate: string,
+  threadList: gmail_v1.Schema$Thread[] = [],
+  pageToken: string | undefined = undefined,
+) {
+  const threadListRequest = await gmailClient.users.threads.list({
+    userId,
+    maxResults: 500,
+    q: " after:" + fromDate + " before:" + toDate,
+    pageToken,
+  });
+
+  threadList.push(...(threadListRequest.data?.threads ?? []));
+
+  if (threadListRequest.data?.nextPageToken) {
+    return getThreadList(
+      gmailClient,
+      userId,
+      fromDate,
+      toDate,
+      threadList,
+      threadListRequest.data?.nextPageToken,
+    );
+  }
+  return threadList;
+}
