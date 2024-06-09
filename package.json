@@ -28,6 +28,7 @@
   "dependencies": {
     "dotenv": "16.4.5",
     "googleapis": "140.0.0",
+    "json-2-csv": "^5.5.1",
     "radash": "12.1.0"
   },
   "lint-staged": {
