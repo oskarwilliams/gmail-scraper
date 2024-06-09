@@ -26,6 +26,7 @@ export const scrapeMetricsForUser = async (
 
   const threadListRequest = await gmailClient.users.threads.list({
     userId,
+    maxResults: 500,
     q: " after:" + afterDate + " before:" + beforeDate,
   });
   const threadList = threadListRequest.data.threads ?? [];
