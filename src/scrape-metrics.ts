@@ -85,6 +85,8 @@ export const scrapeMetricsForUser = async (
     sum(threadDetails, (t) => t.replyTimeInHrs ?? 0) /
     totalEmailsWithReplyTimeCalculated;
 
+  console.log("Scraped metrics for", userId);
+
   return {
     userId, // Email Account
     afterDate: fromDate, // Date after
